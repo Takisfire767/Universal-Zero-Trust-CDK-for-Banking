@@ -1,9 +1,8 @@
 # Quest Secure SDK Anti-Tamper KMP 1.0.0
-
 [![CI](https://github.com/questsecure/sdk-anti-tamper-kmp/actions/workflows/ci.yml/badge.svg)](https://github.com/questsecure/sdk-anti-tamper-kmp/actions/workflows/ci.yml)
 [![Maven Local](https://img.shields.io/badge/maven-com.questsecure%3Asdk--anti--tamper%3A1.0.0-blue)](https://questsecure.com)
 [![KMP](https://img.shields.io/badge/KMP-2.0.20-purple)](https://kotlinlang.org/docs/multiplatform.html)
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.0.0-7F52FF)](https://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.0.20-7F52FF)](https://kotlinlang.org)
 [![License](https://img.shields.io/badge/license-Enterprise-lightgrey)](https://questsecure.com/license)
 
 Defensive Zero Trust attestation for Android (Horizon OS / Meta Quest 2/3/Pro) + iOS 14+. 100% Kotlin, KMP `expect/actual`, non-blocking on device, final decision on the Rust backend.
