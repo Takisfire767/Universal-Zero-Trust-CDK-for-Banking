@@ -1,98 +1,99 @@
-# Universal Zero Trust CDK for Banking
+# Universal Zero Trust CDK para Banking
 
-This repository contains a starter implementation for a Zero Trust, bank-grade Cloud Development Kit (CDK) using AWS best practices for identity, segmentation, observability, and secure deployment.
+Este repositorio contiene una implementación inicial de un Cloud Development Kit (CDK) para entornos bancarios con enfoque Zero Trust, siguiendo las mejores prácticas de AWS en identidad, segmentación, observabilidad y despliegue seguro.
 
-It is designed to help teams build a resilient and auditable banking platform with a strong security baseline, including:
+Está diseñado para ayudar a los equipos a crear una plataforma bancaria resiliente y auditable con una base sólida de seguridad, incluyendo:
 
-- Zero Trust network access model
-- Fine-grained IAM and least privilege
-- Secret and key management
-- Centralized logging and audit trails
-- Segmented workloads for production, staging, and shared services
-- Infrastructure as code with AWS CDK
+- Modelo de acceso Zero Trust
+- IAM granular y principio de mínimo privilegio
+- Gestión de secretos y claves
+- Registro centralizado y trazabilidad de auditoría
+- Carga de trabajo segmentada para producción, staging y servicios compartidos
+- Infraestructura como código con AWS CDK
 
-## Why this repository exists
+## ¿Por qué existe este repositorio?
 
-The goal is to provide a reusable, secure foundation for regulated banking workloads that must meet modern security expectations without sacrificing agility.
+El objetivo es proporcionar una base reutilizable y segura para cargas de trabajo bancarias reguladas que deben cumplir con las expectativas modernas de seguridad sin sacrificar la agilidad.
 
-This project is intentionally structured to be a clean starting point for:
+Este proyecto está estructurado como un punto de partida limpio para:
 
-- secure AWS landing zone patterns
-- account and environment separation
-- application and data plane isolation
-- policy-driven security controls
-- compliance-friendly architecture documentation
+- patrones de landing zone seguros en AWS
+- separación de cuentas y entornos
+- aislamiento del plano de aplicación y del plano de datos
+- controles de seguridad impulsados por políticas
+- documentación de arquitectura orientada a cumplimiento
 
-## Core principles
+## Principios fundamentales
 
-- Zero Trust networking: trust is never assumed, even inside internal services
-- Defense in depth: identity, network, workload, and data protections are layered
-- Least privilege: access is limited to the minimum required
-- Auditability: logs, traces, and configuration changes are retained and reviewable
-- Repeatability: infrastructure is deployed through code and version-controlled
+- Zero Trust networking: nunca se asume confianza, incluso entre servicios internos
+- Defensa en profundidad: se combinan protecciones de identidad, red, carga de trabajo y datos
+- Mínimo privilegio: el acceso se limita solo a lo estrictamente necesario
+- Audibilidad: los registros, trazas y cambios de configuración se conservan y pueden revisarse
+- Repetibilidad: la infraestructura se despliega mediante código y se versiona
 
-## Typical architecture
+## Arquitectura típica
 
-The repository is designed around a modular CDK structure for shared security services and application layers.
+El repositorio está pensado alrededor de una estructura modular de CDK para servicios de seguridad compartidos y capas de aplicación.
 
 ```text
                               ┌──────────────────────────┐
-                              │       Identity Layer      │
-                              │ IAM / Cognito / SSO      │
+                              │       Capa de identidad  │
+                              │ IAM / Cognito / SSO     │
                               └──────────────┬───────────┘
                                              │
                               ┌──────────────▼───────────┐
-                              │    Zero Trust Network    │
+                              │    Red Zero Trust       │
                               │ VPC / Security Groups    │
                               │ / PrivateLink / WAF      │
                               └──────────────┬───────────┘
                                              │
                               ┌──────────────▼───────────┐
-                              │    Banking Workloads      │
-                              │ APIs / Services / Data   │
+                              │  Cargas de trabajo      │
+                              │ bancarias / APIs /      │
+                              │ servicios / datos        │
                               └──────────────┬───────────┘
                                              │
                               ┌──────────────▼───────────┐
-                              │   Observability & Audit   │
+                              │ Observabilidad y auditoría│
                               │ CloudWatch / GuardDuty   │
                               │ Config / Logs / Traces   │
                               └──────────────────────────┘
 ```
 
-## Getting started
+## Primeros pasos
 
-### Prerequisites
+### Requisitos previos
 
-- AWS account with permissions to deploy CDK stacks
-- Node.js 18+ or newer
+- Cuenta de AWS con permisos para desplegar stacks de CDK
+- Node.js 18 o superior
 - AWS CDK v2
-- AWS CLI configured with valid credentials
+- AWS CLI configurado con credenciales válidas
 
-### Install dependencies
+### Instalar dependencias
 
 ```bash
 npm install
 ```
 
-### Bootstrap CDK
+### Inicializar CDK
 
 ```bash
 cdk bootstrap
 ```
 
-### Synthesize the stack
+### Generar la plantilla del stack
 
 ```bash
 cdk synth
 ```
 
-### Deploy
+### Desplegar
 
 ```bash
 cdk deploy
 ```
 
-## Recommended repository structure
+## Estructura recomendada del repositorio
 
 ```text
 .
@@ -107,26 +108,26 @@ cdk deploy
 └── .gitignore
 ```
 
-## Security notes
+## Notas de seguridad
 
-This repository is intended to be a security-conscious blueprint and should be reviewed before production use. In regulated banking environments, validate:
+Este repositorio está pensado como un modelo de referencia con una fuerte orientación de seguridad y debe revisarse antes de usarlo en producción. En entornos bancarios regulados, valida especialmente:
 
-- IAM role scoping and trust boundaries
-- network segmentation and private connectivity
-- secret rotation policies
-- logging retention and access controls
-- change management and deployment approvals
+- alcance de roles IAM y límites de confianza
+- segmentación de red y conectividad privada
+- políticas de rotación de secretos
+- retención de logs y controles de acceso
+- gestión de cambios y aprobaciones de despliegue
 
-## License
+## Licencia
 
-This project is provided as a starter blueprint for internal or enterprise use. Adjust the license according to your legal and compliance requirements.
+Este proyecto se proporciona como un punto de partida para uso interno o empresarial. Ajusta la licencia según tus requisitos legales y de cumplimiento.
 
-## Next steps
+## Siguientes pasos
 
-- Add your real banking workload stacks
-- Define secure network patterns and account boundaries
-- Wire in centralized observability and alerting
-- Implement CI/CD with policy checks and approvals
-- Validate architecture against internal compliance requirements
+- Añadir tus stacks reales de carga de trabajo bancaria
+- Definir patrones seguros de red y límites entre cuentas
+- Integrar observabilidad centralizada y alertas
+- Implementar CI/CD con validaciones de políticas y aprobaciones
+- Validar la arquitectura frente a requisitos internos de cumplimiento
 
-If you want, I can also convert this into a complete AWS CDK project skeleton with a working `cdk.json`, `lib/` stack files, and secure baseline configuration.
+Si quieres, también puedo ayudarte a convertir este repositorio en un proyecto AWS CDK completo con un `cdk.json`, archivos de stack dentro de `lib/` y una configuración segura de referencia.
