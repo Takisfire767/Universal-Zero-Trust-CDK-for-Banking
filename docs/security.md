@@ -1,14 +1,14 @@
 # Security notes
 
-## Principles
+## Goals
 
-- Detect without blocking the process
-- Avoid silent termination or forced exit
-- Keep the backend as the source of truth
+- Prevent silent tamper bypass
+- Keep risk classification auditable
+- Avoid false positives from enterprise MDM or regulated devices
 
-## Signal families
+## Signal examples
 
-- Frida detection
-- Magisk/Jailbreak indicators
-- Debuggable and test-key properties
-- Verified device integrity metadata
+- Frida port and map detection
+- Magisk and jailbreak paths
+- Debuggable/test-key properties
+- Device attestation metadata

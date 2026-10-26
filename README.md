@@ -4,14 +4,7 @@ Defensive Zero Trust attestation for Android (Horizon OS / Meta Quest 2/3/Pro) a
 
 ## Overview
 
-This repository contains a Kotlin Multiplatform SDK designed to detect signals of tampering and classify the risk without blocking the user experience. The app reports signals, while the backend remains the final decision authority.
-
-## Modules
-
-- `sdk-anti-tamper/` — KMP SDK module
-- `docs/` — security and architecture docs
-- `examples/` — sample code and integration snippets
-- `scripts/` — validation automation
+This repository contains a Kotlin Multiplatform SDK that detects tampering signals, classifies them into risk levels, and keeps the app experience non-blocking. The backend remains the source of truth for final attestation policy.
 
 ## Quick start
 
@@ -19,16 +12,22 @@ This repository contains a Kotlin Multiplatform SDK designed to detect signals o
 ./gradlew :sdk-anti-tamper:allTests
 ```
 
-## API example
+## API
 
 ```kotlin
+import com.questsecure.tamper.TamperDetector
+
 val result = TamperDetector.check()
 println("risk=${result.risk} signals=${result.signals}")
 ```
 
-## Risk levels
+## Risk model
 
-- LOW — normal device state
-- WARNING_60 — debug/test signals observed
-- DRIFT_75 — Magisk/JB environment detected
-- CRITICAL_90 — Frida or equivalent instrumentation attack signals detected
+- LOW = 0
+- WARNING_60 = 60
+- DRIFT_75 = 75
+- CRITICAL_90 = 90
+
+## Status
+
+This revision includes the core SDK API, anti-tamper signal classification, Android/iOS implementations, and CI scaffolding.

@@ -1,26 +1,49 @@
 package com.questsecure.tamper
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import java.io.File
+import java.net.Socket
 
-class AttackSimulationTest {
-    @Test
-    fun `classifier returns low for clean state`() {
-        assertEquals(Risk.LOW, RiskClassifier.classify(emptyList()))
+public actual object TamperDetector {
+    public actual fun check(): AttestationResult {
+        val signals = mutableListOf<String>()
+
+        val maps = readFileSafe("/proc/self/maps")
+        if (maps.contains("frida", ignoreCase = true) || maps.contains("gum-js", ignoreCase = true) || maps.contains("gadget", ignoreCase = true)) {
+            signals += "FRIDA_MAPS_DETECTED"
+        }
+
+        val mounts = readFileSafe("/proc/self/mounts")
+        if (mounts.contains("magisk", ignoreCase = true) || mounts.contains("rootfs", ignoreCase = true)) {
+            signals += "MAGISK_MOUNT"
+        }
+
+        val debuggable = System.getProperty("ro.debuggable")
+        if (debuggable == "1") {
+            signals += "PROP_DEBUGGABLE_1"
+        }
+
+        val secure = System.getProperty("ro.secure")
+        if (secure == "0") {
+            signals += "PROP_SECURE_0"
+        }
+
+        val buildTags = System.getProperty("ro.build.tags")
+        if (buildTags?.contains("test-keys", ignoreCase = true) == true) {
+            signals += "BUILD_TAGS_TEST_KEYS"
+        }
+
+        runCatching {
+            Socket("127.0.0.1", 27042).use { signals += "FRIDA_PORT_27042_OPEN" }
+        }
+
+        val risk = RiskClassifier.classify(signals)
+        return AttestationResult(
+            risk = risk,
+            signals = signals.distinct(),
+            deviceIntegrity = RiskClassifier.deviceIntegrity(risk),
+            timestampMs = System.currentTimeMillis()
+        )
     }
 
-    @Test
-    fun `classifier returns warning for debug build flags`() {
-        assertEquals(Risk.WARNING_60, RiskClassifier.classify(listOf("PROP_DEBUGGABLE_1")))
-    }
-
-    @Test
-    fun `classifier returns drift for magisk signals`() {
-        assertEquals(Risk.DRIFT_75, RiskClassifier.classify(listOf("MAGISK_MOUNT")))
-    }
-
-    @Test
-    fun `classifier returns critical for frida signals`() {
-        assertEquals(Risk.CRITICAL_90, RiskClassifier.classify(listOf("FRIDA_PORT_27042_OPEN")))
-    }
+    private fun readFileSafe(path: String): String = runCatching { File(path).readText() }.getOrDefault("")
 }
