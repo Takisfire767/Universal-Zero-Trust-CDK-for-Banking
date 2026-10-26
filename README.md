@@ -1,8 +1,8 @@
- Quest Secure SDK Anti-Tamper KMP 1.0.0
+## Quest Secure SDK Anti-Tamper KMP 1.0.0
 [![CI](https://github.com/questsecure/sdk-anti-tamper-kmp/actions/workflows/ci.yml/badge.svg)](https://github.com/questsecure/sdk-anti-tamper-kmp/actions/workflows/ci.yml)
 [![Maven Local](https://img.shields.io/badge/maven-com.questsecure%3Asdk--anti--tamper%3A1.0.0-blue)](https://questsecure.com)
 [![KMP](https://img.shields.io/badge/KMP-2.0.20-purple)](https://kotlinlang.org/docs/multiplatform.html)
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.0.0-7F52FF)](https://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.0.20-7F52FF)](https://kotlinlang.org)
 [![License](https://img.shields.io/badge/license-Enterprise-lightgrey)](https://questsecure.com/license)
 
 Defensive Zero Trust attestation for Android (Horizon OS / Meta Quest 2/3/Pro) + iOS 14+. 100% Kotlin, KMP `expect/actual`, non-blocking on device, final decision on the Rust backend.
@@ -25,33 +25,37 @@ Defensive Zero Trust attestation for Android (Horizon OS / Meta Quest 2/3/Pro) +
 
 ```mermaid
 flowchart TD
-    A[Quest Secure App / iOS App] --> B[TamperDetector.check()]
-    B --> C{Risk Classifier}
-    C -->|LOW 0| D[Advanced - JWT 900s]
-    C -->|WARNING_60| E[Basic - JWT 60s + log]
-    C -->|DRIFT_75 Magisk/JB| F[Basic - JWT 20s + challenge]
-    C -->|CRITICAL_90 Frida| G[Basic - JWT 20s + step-up auth]
+    A["Quest Secure App / iOS App"] --> B["TamperDetector.check()"]
+    B --> C{"Risk Classifier"}
 
-    B --> H[Signals: FRIDA_PORT, MAPS, MAGISK_PATH, MOUNT, PROP]
-    H --> I[Rust Backend /nonce + /verify]
-    I --> J{Verify packageId + certSha256 + nonce + signals}
-    J --> K[Play Integrity / App Attest - 2nd layer]
-    J --> L[Respond X-JWT-TTL + X-Attestation-Risk]
-    L --> M[App degrades, never blocks]
+    C -->|"LOW 0"| D["Advanced - JWT 900s"]
+    C -->|"WARNING_60"| E["Basic - JWT 60s + log"]
+    C -->|"DRIFT_75 Magisk/JB"| F["Basic - JWT 20s + challenge"]
+    C -->|"CRITICAL_90 Frida"| G["Basic - JWT 20s + step-up auth"]
 
-    subgraph AndroidMain
-        B1[/proc/self/maps - frida/gum-js/gadget/]
-        B2[Socket 127.0.0.1:27042]
-        B3[/proc/self/mounts magisk + paths + SystemProperties]
+    B --> H["Signals: FRIDA_PORT, MAPS, MAGISK_PATH, MOUNT, PROP"]
+    H --> I["Rust Backend /nonce + /verify"]
+    I --> J{"Verify packageId + certSha256 + nonce + signals"}
+    J --> K["Play Integrity / App Attest - 2nd layer"]
+    J --> L["Respond X-JWT-TTL + X-Attestation-Risk"]
+    L --> M["App degrades, never blocks"]
+
+    subgraph AndroidMain["AndroidMain"]
+        B1["/proc/self/maps - frida/gum-js/gadget/"]
+        B2["Socket 127.0.0.1:27042"]
+        B3["/proc/self/mounts magisk + paths + SystemProperties"]
     end
 
-    subgraph iOSMain
-        C1[_dyld_image_count FridaGadget]
-        C2[Socket 27042 + fork check + Cydia paths]
+    subgraph iOSMain["iOSMain"]
+        C1["_dyld_image_count FridaGadget"]
+        C2["Socket 27042 + fork check + Cydia paths"]
     end
 
-    B --- B1 & B2 & B3
-    B --- C1 & C2
+    B --- B1
+    B --- B2
+    B --- B3
+    B --- C1
+    B --- C2
 ```
 
 ---

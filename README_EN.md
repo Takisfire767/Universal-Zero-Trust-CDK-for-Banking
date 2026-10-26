@@ -25,33 +25,37 @@ Defensive Zero Trust attestation for Android (Horizon OS / Meta Quest 2/3/Pro) +
 
 ```mermaid
 flowchart TD
-    A[Quest Secure App / iOS App] --> B[TamperDetector.check()]
-    B --> C{Risk Classifier}
-    C -->|LOW 0| D[Advanced - JWT 900s]
-    C -->|WARNING_60| E[Basic - JWT 60s + log]
-    C -->|DRIFT_75 Magisk/JB| F[Basic - JWT 20s + challenge]
-    C -->|CRITICAL_90 Frida| G[Basic - JWT 20s + step-up auth]
+    A["Quest Secure App / iOS App"] --> B["TamperDetector.check()"]
+    B --> C{"Risk Classifier"}
 
-    B --> H[Signals: FRIDA_PORT, MAPS, MAGISK_PATH, MOUNT, PROP]
-    H --> I[Rust Backend /nonce + /verify]
-    I --> J{Verify packageId + certSha256 + nonce + signals}
-    J --> K[Play Integrity / App Attest - 2nd layer]
-    J --> L[Respond X-JWT-TTL + X-Attestation-Risk]
-    L --> M[App degrades, never blocks]
+    C -->|"LOW 0"| D["Advanced - JWT 900s"]
+    C -->|"WARNING_60"| E["Basic - JWT 60s + log"]
+    C -->|"DRIFT_75 Magisk/JB"| F["Basic - JWT 20s + challenge"]
+    C -->|"CRITICAL_90 Frida"| G["Basic - JWT 20s + step-up auth"]
 
-    subgraph AndroidMain
-        B1[/proc/self/maps - frida/gum-js/gadget/]
-        B2[Socket 127.0.0.1:27042]
-        B3[/proc/self/mounts magisk + paths + SystemProperties]
+    B --> H["Signals: FRIDA_PORT, MAPS, MAGISK_PATH, MOUNT, PROP"]
+    H --> I["Rust Backend /nonce + /verify"]
+    I --> J{"Verify packageId + certSha256 + nonce + signals"}
+    J --> K["Play Integrity / App Attest - 2nd layer"]
+    J --> L["Respond X-JWT-TTL + X-Attestation-Risk"]
+    L --> M["App degrades, never blocks"]
+
+    subgraph AndroidMain["AndroidMain"]
+        B1["/proc/self/maps - frida/gum-js/gadget/"]
+        B2["Socket 127.0.0.1:27042"]
+        B3["/proc/self/mounts magisk + paths + SystemProperties"]
     end
 
-    subgraph iOSMain
-        C1[_dyld_image_count FridaGadget]
-        C2[Socket 27042 + fork check + Cydia paths]
+    subgraph iOSMain["iOSMain"]
+        C1["_dyld_image_count FridaGadget"]
+        C2["Socket 27042 + fork check + Cydia paths"]
     end
 
-    B --- B1 & B2 & B3
-    B --- C1 & C2
+    B --- B1
+    B --- B2
+    B --- B3
+    B --- C1
+    B --- C2
 ```
 
 ---
